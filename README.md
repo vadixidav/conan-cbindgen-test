@@ -1,10 +1,10 @@
 # conan-cbindgen-test
 Demonstrates how to write a C++ API with automatically generated bindings using the Conan package manager
 
-- See `build.rs` for how `cbindgen` is being used.
-- See `conanfile.py` for how the build and consumption is set up.
 - See `src/lib.rs` to see the Rust code which has automatic C++ bindings generated for it.
 - See `test_package/example.cpp` to see how the generated header is consumed in C++.
+- See `build.rs` for how `cbindgen` is being used.
+- See `conanfile.py` for how the build and consumption is set up.
 
 ## How to use
 
