@@ -1,0 +1,15 @@
+[package]
+name = "cbindgen_test"
+version = "0.2.0"
+authors = ["Geordon Worley <vadixidav@gmail.com>"]
+
+[lib]
+crate-type = ["staticlib"]
+
+[profile]
+panic = "abort"
+
+[dependencies]
+
+[build-dependencies]
+cbindgen = "0.6.0"
