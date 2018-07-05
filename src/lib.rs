@@ -1,7 +1,7 @@
 #[repr(C)]
 #[derive(Debug)]
 pub enum TestEnum {
-    Foo(i16),
+    Foo(u16),
     Bar { x: u8, y: i16 },
     Baz,
 }

@@ -6,6 +6,58 @@ Demonstrates how to write a C++ API with automatically generated bindings using 
 - See `build.rs` for how `cbindgen` is being used.
 - See `conanfile.py` for how the build and consumption is set up.
 
+## What does it do?
+
+You write Rust code in lib.rs and annotate with `extern "C"` as appropritate:
+```rust
+#[repr(C)]
+#[derive(Debug)]
+pub enum TestEnum {
+    Foo(u16),
+    Bar { x: u8, y: i16 },
+    Baz,
+}
+
+#[no_mangle]
+pub extern "C" fn hello(test_enum: TestEnum) {
+    println!("Hello, {:?}!", test_enum);
+}
+```
+
+Then all the headers for the bindings are automatically generated and you can use the types and functions from C++:
+```cpp
+#include "cbindgen_test.h"
+
+int main() {
+    // Foo
+    cbindgen_test::TestEnum a;
+    a.tag = cbindgen_test::TestEnum::Tag::Foo;
+    a.foo._0 = 5;
+    cbindgen_test::hello(a);
+
+    // Bar
+    cbindgen_test::TestEnum b;
+    b.tag = cbindgen_test::TestEnum::Tag::Bar;
+    b.bar.x = 1;
+    b.bar.y = 2;
+    cbindgen_test::hello(b);
+
+    // Baz
+    cbindgen_test::TestEnum c;
+    c.tag = cbindgen_test::TestEnum::Tag::Baz;
+    cbindgen_test::hello(c);
+
+    return 0;
+}
+```
+
+Output of the example:
+```
+Hello, Foo(5)!
+Hello, Bar { x: 1, y: 2 }!
+Hello, Baz!
+```
+
 ## How to use
 
 1. Clone this repository

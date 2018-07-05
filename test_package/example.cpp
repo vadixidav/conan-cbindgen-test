@@ -1,4 +1,3 @@
-#include <iostream>
 #include "cbindgen_test.h"
 
 int main() {
