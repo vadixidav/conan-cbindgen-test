@@ -6,6 +6,8 @@ class CbindgentestConan(ConanFile):
     version = "0.2.0"
     description = "Test generated C++ bindings for Rust"
     settings = "os", "compiler", "build_type", "arch"
+    options = {"shared": [True, False]}
+    default_options = "shared=False"
     no_copy_source = True
     exports_sources = "src/*", "build.rs", "Cargo.toml"
 
@@ -31,16 +33,18 @@ class CbindgentestConan(ConanFile):
         out_dir = "{}/{}".format(self.cargo_target(), mode)
         # This assumes your header goes into the root of the include path.
         self.copy("{}.h".format(self.name), dst="include")
-        self.copy("{}.dll".format(self.name), dst="bin",
-                  src=out_dir, keep_path=False)
         self.copy("{}.lib".format(self.name), dst="lib",
                   src=out_dir, keep_path=False)
-        self.copy("*{}.so*".format(self.name), dst="lib",
-                  src=out_dir, keep_path=False)
-        self.copy("*{}.dylib*".format(self.name), dst="lib",
-                  src=out_dir, keep_path=False)
-        self.copy("*{}.a".format(self.name), dst="lib",
-                  src=out_dir, keep_path=False)
+        if self.options.shared:
+            self.copy("*{}.so".format(self.name), dst="lib",
+                      src=out_dir, keep_path=False)
+            self.copy("*{}.dylib*".format(self.name), dst="lib",
+                      src=out_dir, keep_path=False)
+            self.copy("{}.dll".format(self.name), dst="bin",
+                      src=out_dir, keep_path=False)
+        else:
+            self.copy("*{}.a".format(self.name), dst="lib",
+                      src=out_dir, keep_path=False)
 
     def package_info(self):
         self.cpp_info.libs = tools.collect_libs(self)
@@ -50,3 +54,7 @@ class CbindgentestConan(ConanFile):
         if self.settings.os == "Linux":
             self.cpp_info.libs += ["pthread", "dl"]
             self.cpp_info.cppflags = ["-pthread"]
+
+    def build_id(self):
+        # Builds produce shared and static libs.
+        self.info_build.options.shared = "Any"

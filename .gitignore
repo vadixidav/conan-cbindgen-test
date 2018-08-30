@@ -2,3 +2,5 @@
 /build
 /test_package/build
 /target
+.vscode
+/cbindgen_test.h

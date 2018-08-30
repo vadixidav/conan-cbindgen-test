@@ -4,7 +4,7 @@ version = "0.2.0"
 authors = ["Geordon Worley <vadixidav@gmail.com>"]
 
 [lib]
-crate-type = ["staticlib"]
+crate-type = ["staticlib", "cdylib"]
 
 [profile]
 panic = "abort"
