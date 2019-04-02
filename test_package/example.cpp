@@ -1,6 +1,6 @@
 #include "cbindgen_test.h"
 
-int main() {
+int main(int argc, char *argv[]) {
     // Foo
     cbindgen_test::TestEnum a;
     a.tag = cbindgen_test::TestEnum::Tag::Foo;

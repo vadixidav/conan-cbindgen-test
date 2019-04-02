@@ -9,17 +9,17 @@ class CbindgentestTestConan(ConanFile):
 
     def build(self):
         cmake = CMake(self)
-        # Current dir is "test_package/build/<build_id>" and CMakeLists.txt is
-        # in "test_package"
         cmake.configure()
         cmake.build()
 
     def imports(self):
-        self.copy("*.dll", dst="bin", src="bin")
-        self.copy("*.dylib*", dst="bin", src="lib")
-        self.copy('*.so*', dst='bin', src='lib')
+        self.copy(pattern="*.dll", dst="bin",
+                  src="bin")
+        self.copy(pattern="*.dylib", dst="bin",
+                  src="lib")
 
     def test(self):
         if not tools.cross_building(self.settings):
-            os.chdir("bin")
-            self.run(".%sexample" % os.sep)
+            with tools.run_environment(self):
+                cmake = CMake(self)
+                cmake.test()
