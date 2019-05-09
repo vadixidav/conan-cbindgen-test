@@ -37,8 +37,10 @@ class CbindgenTestConan(ConanFile):
         # This assumes your header goes into the root of the include path.
         self.copy("{}.h".format(self.name), dst="include")
         for post in ["_c", ""]:
-            for ext in ["lib", "a"]:
+            for ext in ["lib", "a", "so"]:
                 self.copy("*{}{}.{}".format(self.name, post, ext), dst="lib", keep_path=False)
+            if self.settings.os == "Windows":
+                    self.copy("*{}{}.dll".format(self.name, post), dst="bin", keep_path=False)
 
     def package_info(self):
         self.cpp_info.libs = tools.collect_libs(self)
