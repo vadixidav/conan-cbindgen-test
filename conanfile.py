@@ -2,7 +2,7 @@ from conans import ConanFile, VisualStudioBuildEnvironment, CMake, tools
 
 
 class CbindgenTestConan(ConanFile):
-    name = "cbindgen_test"
+    name = "cbindgen-test"
     version = "0.1.0"
     description = "cbindgen, Cargo, and Conan demo package"
     settings = "os", "compiler", "build_type", "arch"
@@ -36,14 +36,20 @@ class CbindgenTestConan(ConanFile):
     def package(self):
         # This assumes your header goes into the root of the include path.
         self.copy("{}.h".format(self.name), dst="include")
-        for post in ["_c", ""]:
-            for ext in ["lib", "a", "so"]:
-                self.copy("*{}{}.{}".format(self.name, post, ext), dst="lib", keep_path=False)
-            if self.settings.os == "Windows":
-                    self.copy("*{}{}.dll".format(self.name, post), dst="bin", keep_path=False)
+        for ext in ["so", "dll.lib"]:
+            self.copy("*{}-c.{}".format(self.name, ext).replace("-", "_"), dst="lib", keep_path=False)
+        self.copy("*{}-c.dll".format(self.name).replace("-", "_"), dst="bin", keep_path=False)
 
     def package_info(self):
-        self.cpp_info.libs = tools.collect_libs(self)
+        # On Windows, the library gets added as name.dll because name.dll.lib gets stripped.
+        # This results in the linker thinking the library is called name.lib because it strips
+        # dll from the extension and replaces it with lib, presumably so that the user doesn't need
+        # to understand the difference between a dll and a lib.
+        if self.settings.os == "Windows":
+            self.cpp_info.libs = ["{}-c.dll.lib".format(self.name).replace("-", "_")]
+        else:
+            self.cpp_info.libs = tools.collect_libs(self)
+
         if self.settings.os == "Windows":
             self.cpp_info.libs += ["Ws2_32", "Userenv", "Dwmapi", "Dbghelp"]
         if self.settings.os == "Linux":

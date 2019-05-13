@@ -1,4 +1,4 @@
-#include "cbindgen_test.h"
+#include "cbindgen-test.h"
 
 int main(int argc, char *argv[]) {
     // Foo

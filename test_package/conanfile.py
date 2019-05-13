@@ -17,6 +17,8 @@ class CbindgentestTestConan(ConanFile):
                   src="bin")
         self.copy(pattern="*.dylib", dst="bin",
                   src="lib")
+        self.copy(pattern="*.so*", dst="bin",
+                  src="lib")
 
     def test(self):
         if not tools.cross_building(self.settings):

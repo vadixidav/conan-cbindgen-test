@@ -1,5 +1,5 @@
 [package]
-name = "cbindgen_test_c"
+name = "cbindgen-test-c"
 version = "0.1.0"
 authors = ["Geordon Worley <vadixidav@gmail.com>"]
 edition = "2018"
@@ -12,9 +12,9 @@ crate-type = ["cdylib"]
 headers = []
 
 [build-dependencies]
-cbindgen = "0.8.3"
+cbindgen = "0.8.6"
 
-[profile.debug]
+[profile.dev]
 panic = "abort"
 
 [profile.release]
